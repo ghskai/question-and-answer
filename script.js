@@ -62,12 +62,16 @@ function displayQuestions(questions) {
   area.innerHTML = '';
 
   questions.forEach((q, idx) => {
+    const answerId = `answer-${idx}`;
+
     const block = document.createElement('div');
     block.className = 'question-block';
     block.innerHTML = `
       <h3>Q${idx + 1}: ${q.question}</h3>
-      <button class="show-answer" data-idx="${idx}">解答と解説を見る</button>
-      <div class="answer-block" style="display:none;">
+      <div class="button-center">
+        <button class="show-answer" data-target="${answerId}">解答と解説を見る</button>
+      </div>
+      <div class="answer-block" id="${answerId}" style="display:none;">
         <b>分野:</b> ${q.category}<br>
         <b>難易度:</b> ${q.difficulty}<br>
         <b>解答と解説:</b><br>${q.answer.replace(/\n/g, '<br>')}
@@ -76,13 +80,14 @@ function displayQuestions(questions) {
     area.appendChild(block);
   });
 
-  // → 親のquestion-blockにイベントをバブリングで付ける方式（安全）
-  area.addEventListener('click', function(e) {
-    if (e.target.classList.contains('show-answer')) {
-      const answerBlock = e.target.nextElementSibling;
-      if (answerBlock && answerBlock.classList.contains('answer-block')) {
+  // ボタンイベント（data-target方式で確実に動く）
+  document.querySelectorAll('.show-answer').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetId = e.target.getAttribute('data-target');
+      const answerBlock = document.getElementById(targetId);
+      if (answerBlock) {
         answerBlock.style.display = 'block';
       }
-    }
+    });
   });
 }
