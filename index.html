@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>医学部編入一問一答【<span id="today"></span>】</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>医学部編入一問一答【<span id="today"></span>】</h2>
+
+  <div class="selector">
+    <label for="category">分野を選択：</label>
+    <select id="category">
+      <option value="">-- 分野を選択 --</option>
+      <option value="免疫学">免疫学</option>
+      <option value="生化学">生化学</option>
+      <option value="微生物学">微生物学</option>
+      <option value="統計学">統計学</option>
+      <option value="その他">その他</option>
+    </select>
+    <button id="start-btn" onclick="loadQuestions()">演習開始</button>
+  </div>
+
+  <div id="quiz-area"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
