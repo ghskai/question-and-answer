@@ -1,6 +1,9 @@
 document.querySelectorAll('#today').forEach(e => e.textContent = new Date().toISOString().split('T')[0]);
 
-const otherCategories = ['英語','解剖学','原子物理学','線形代数学','組織学','総合','熱力学','波動','発生学','病理学','無機化学','薬理学','有機化学','力学'];
+const otherCategories = [
+  '英語','解剖学','原子物理学','線形代数学','組織学','総合',
+  '熱力学','波動','発生学','病理学','無機化学','薬理学','有機化学','力学'
+];
 
 function loadQuestions() {
   const category = document.getElementById('category').value;
@@ -28,6 +31,9 @@ function loadQuestions() {
       const selected = pseudoRandomSelect(filtered, seed, 3);
 
       displayQuestions(selected);
+    })
+    .catch(err => {
+      document.getElementById('quiz-area').innerHTML = `<p>データ読み込みエラー: ${err.message}</p>`;
     });
 }
 
@@ -58,15 +64,28 @@ function displayQuestions(questions) {
   questions.forEach((q, idx) => {
     const block = document.createElement('div');
     block.className = 'question-block';
-    block.innerHTML = `<h3>Q${idx + 1}: ${q.question}</h3>
+    block.innerHTML = `
+      <h3>Q${idx + 1}: ${q.question}</h3>
       <div class="button-center">
-        <button class="show-answer" onclick="this.nextElementSibling.style.display='block'">解答と解説を見る</button>
+        <button class="show-answer" data-idx="${idx}">解答と解説を見る</button>
       </div>
-      <div class="answer-block" style="display:none;">
+      <div class="answer-block" id="answer-${idx}" style="display:none;">
         <b>分野:</b> ${q.category}<br>
         <b>難易度:</b> ${q.difficulty}<br>
         <b>解答と解説:</b><br>${q.answer.replace(/\n/g, '<br>')}
-      </div>`;
+      </div>
+    `;
     area.appendChild(block);
+  });
+
+  // ボタンイベントを追加
+  document.querySelectorAll('.show-answer').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const idx = e.target.getAttribute('data-idx');
+      const answerBlock = document.getElementById(`answer-${idx}`);
+      if (answerBlock) {
+        answerBlock.style.display = 'block';
+      }
+    });
   });
 }
