@@ -66,10 +66,8 @@ function displayQuestions(questions) {
     block.className = 'question-block';
     block.innerHTML = `
       <h3>Q${idx + 1}: ${q.question}</h3>
-      <div class="button-center">
-        <button class="show-answer" data-idx="${idx}">解答と解説を見る</button>
-      </div>
-      <div class="answer-block" id="answer-${idx}" style="display:none;">
+      <button class="show-answer" data-idx="${idx}">解答と解説を見る</button>
+      <div class="answer-block" style="display:none;">
         <b>分野:</b> ${q.category}<br>
         <b>難易度:</b> ${q.difficulty}<br>
         <b>解答と解説:</b><br>${q.answer.replace(/\n/g, '<br>')}
@@ -78,14 +76,13 @@ function displayQuestions(questions) {
     area.appendChild(block);
   });
 
-  // ボタンイベントを追加
-  document.querySelectorAll('.show-answer').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const idx = e.target.getAttribute('data-idx');
-      const answerBlock = document.getElementById(`answer-${idx}`);
-      if (answerBlock) {
+  // → 親のquestion-blockにイベントをバブリングで付ける方式（安全）
+  area.addEventListener('click', function(e) {
+    if (e.target.classList.contains('show-answer')) {
+      const answerBlock = e.target.nextElementSibling;
+      if (answerBlock && answerBlock.classList.contains('answer-block')) {
         answerBlock.style.display = 'block';
       }
-    });
+    }
   });
 }
