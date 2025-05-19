@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>GHS会 一問一答</title>
+  <title>GHS会 一問一答【<span id="today"></span>】</title>
   <!-- OGP meta tags -->
   <meta property="og:title" content="GHS会 一問一答">
   <meta property="og:description" content="医学部学士編入試験向けの一問一答演習サイトです！分野ごとに毎日3問学習できます。">
@@ -11,11 +11,10 @@
   <meta property="og:image" content="https://ghskai.github.io/question-and-answer/ogp-image.jpg">
   <meta property="og:site_name" content="医学部編入一問一答">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>GHS会 一問一答 <span id="today"></span></h2>
+  <h2>GHS会 編入一問一答【<span id="today"></span>】</h2>
 
   <div class="selector">
     <label for="category">分野を選択：</label>
@@ -27,7 +26,7 @@
       <option value="統計学">統計学</option>
       <option value="その他">その他</option>
     </select>
-    <button id="start-btn">演習開始</button>
+    <button id="start-btn" onclick="loadQuestions()">演習開始</button>
   </div>
 
   <div id="quiz-area"></div>
