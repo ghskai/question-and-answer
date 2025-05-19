@@ -1,16 +1,15 @@
 body {
-  font-family: 'Helvetica Neue', sans-serif;
-  background-color: #f7f9fc;
-  color: #222;
-  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f6f8;
+  color: #333;
   padding: 20px;
+  margin: 0;
 }
 
 h2 {
+  color: #0056b3;
   text-align: center;
-  color: #003366;
-  font-size: 28px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .selector {
@@ -19,43 +18,42 @@ h2 {
 }
 
 select, button {
-  padding: 12px 18px;
-  font-size: 16px;
-  border: 1px solid #bbb;
+  padding: 12px 20px;
+  font-size: 18px;
   border-radius: 6px;
+  border: 1px solid #ccc;
   margin: 10px;
 }
 
 button {
-  background-color: #0066cc;
+  background-color: #0056b3;
   color: white;
   cursor: pointer;
   transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #004d99;
+  background-color: #003f7f;
 }
 
 .question-block, .answer-block {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  padding: 24px;
-  margin: 20px auto;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 25px;
   max-width: 800px;
-  transition: all 0.3s ease;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .answer-block {
-  border-left: 4px solid #28a745;
-  display: none;
-  animation: fadeIn 0.3s ease-in-out;
+  border-left: 5px solid #28a745;
 }
 
 .button-center {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 button.show-answer {
@@ -66,14 +64,12 @@ button.show-answer:hover {
   background-color: #1e7e34;
 }
 
-@keyframes fadeIn {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
   select, button {
     width: 90%;
-    font-size: 18px;
+    font-size: 20px;
+  }
+  .question-block, .answer-block {
+    padding: 20px;
   }
 }
