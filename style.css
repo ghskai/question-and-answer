@@ -1,15 +1,16 @@
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f6f8;
-  color: #333;
-  padding: 20px;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #f7f9fc;
+  color: #222;
   margin: 0;
+  padding: 20px;
 }
 
 h2 {
-  color: #0056b3;
   text-align: center;
-  margin-bottom: 20px;
+  color: #003366;
+  font-size: 28px;
+  margin-bottom: 25px;
 }
 
 .selector {
@@ -18,42 +19,43 @@ h2 {
 }
 
 select, button {
-  padding: 12px 20px;
-  font-size: 18px;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: 1px solid #bbb;
   border-radius: 6px;
-  border: 1px solid #ccc;
   margin: 10px;
 }
 
 button {
-  background-color: #0056b3;
+  background-color: #0066cc;
   color: white;
   cursor: pointer;
   transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #003f7f;
+  background-color: #004d99;
 }
 
 .question-block, .answer-block {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  padding: 20px;
-  margin-bottom: 25px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  padding: 24px;
+  margin: 20px auto;
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  transition: all 0.3s ease;
 }
 
 .answer-block {
-  border-left: 5px solid #28a745;
+  border-left: 4px solid #28a745;
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .button-center {
   text-align: center;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 button.show-answer {
@@ -64,12 +66,14 @@ button.show-answer:hover {
   background-color: #1e7e34;
 }
 
-@media screen and (max-width: 600px) {
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@media (max-width: 600px) {
   select, button {
     width: 90%;
-    font-size: 20px;
-  }
-  .question-block, .answer-block {
-    padding: 20px;
+    font-size: 18px;
   }
 }
