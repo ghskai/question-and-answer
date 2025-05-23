@@ -249,8 +249,7 @@
           <div class="answer-block" id="${answerId}">
             <span class="badge category">${q.category}</span>
             <span class="badge difficulty-${q.difficulty}">難易度: ${q.difficulty}</span>
-            <div style="margin-top: 10px;"><b>解答と解説:</b><br>${q.answer.replace(/
-/g, '<br>')}</div>
+           <div style="margin-top: 10px;"><b>解答と解説:</b><br>${q.answer.replace(/\n/g, '<br>')}</div>
           </div>
         `;
         area.appendChild(block);
