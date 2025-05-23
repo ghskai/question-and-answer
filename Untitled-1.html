@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>GHS会 一問一答【<span id="today"></span>】</title>
+  <!-- OGP meta tags -->
+  <meta property="og:title" content="GHS会 一問一答">
+  <meta property="og:description" content="医学部学士編入試験向けの一問一答演習サイトです！分野ごとに毎日3問学習できます。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ghskai.github.io/question-and-answer/">
+  <meta property="og:image" content="https://ghskai.github.io/question-and-answer/ogp-image.png">
+  <meta property="og:site_name" content="医学部編入一問一答">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #f4f6f8, #e8ebee);
+      color: #333;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h2 {
+      color: #003366;
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .selector {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    select, button {
+      padding: 14px 24px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin: 10px;
+      outline: none;
+    }
+
+    button {
+      background-color: #0066cc;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #004d99;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .question-block {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      margin: 25px auto;
+      max-width: 820px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .question-block.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .answer-block {
+      border-left: 6px solid #28a745;
+      display: none;
+      animation: fadeIn 0.4s ease-in-out forwards;
+      margin-top: 15px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .button-center {
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    button.show-answer {
+      background-color: #28a745;
+    }
+
+    button.show-answer:hover {
+      background-color: #1e7e34;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      margin-right: 6px;
+      font-size: 0.85em;
+      border-radius: 12px;
+      color: white;
+    }
+
+    .badge.category {
+      background-color: #6c757d;
+    }
+
+    .badge.difficulty-易 {
+      background-color: #17a2b8;
+    }
+
+    .badge.difficulty-普 {
+      background-color: #ffc107;
+    }
+
+    .badge.difficulty-難 {
+      background-color: #dc3545;
+    }
+
+    @media screen and (max-width: 600px) {
+      select, button {
+        width: 90%;
+        font-size: 20px;
+      }
+      .question-block, .answer-block {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>GHS会 一問一答【<span id="today"></span>】</h2>
+
+  <div class="selector">
+    <label for="category">分野を選択：</label>
+    <select id="category">
+      <option value="">-- 分野を選択 --</option>
+      <option value="免疫学">免疫学</option>
+      <option value="生化学">生化学</option>
+      <option value="微生物学">微生物学</option>
+      <option value="統計学">統計学</option>
+      <option value="その他">その他</option>
+    </select>
+    <button id="start-btn">演習開始</button>
+  </div>
+
+  <div id="quiz-area"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      document.querySelectorAll('#today').forEach(e => e.textContent = today);
+
+      const startBtn = document.getElementById('start-btn');
+      startBtn.addEventListener('click', loadQuestions);
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      window.observeBlocks = () => {
+        document.querySelectorAll('.question-block').forEach(block => observer.observe(block));
+      };
+    });
+
+    const otherCategories = [
+      '英語','解剖学','原子物理学','線形代数学','組織学','総合',
+      '熱力学','波動','発生学','病理学','無機化学','薬理学','有機化学','力学'
+    ];
+
+    function loadQuestions() {
+      const category = document.getElementById('category').value;
+      const quizArea = document.getElementById('quiz-area');
+
+      if (!category) {
+        alert('分野を選択してください。');
+        return;
+      }
+
+      quizArea.innerHTML = '<h3>問題をロード中...</h3>';
+
+      fetch('all-questions.json')
+        .then(res => res.json())
+        .then(data => {
+          const today = new Date().toISOString().split('T')[0];
+          const filtered = category === 'その他'
+            ? data.filter(q => otherCategories.includes(q.category))
+            : data.filter(q => q.category === category);
+
+          if (filtered.length < 3) {
+            quizArea.innerHTML = `<p>該当分野の問題が不足しています。</p>`;
+            return;
+          }
+
+          const seed = hash(`${today}-${category}`);
+          const selected = pseudoRandomSelect(filtered, seed, 3);
+
+          displayQuestions(selected);
+          setTimeout(() => window.observeBlocks(), 100);
+        })
+        .catch(err => {
+          quizArea.innerHTML = `<p>データ読み込みエラー: ${err.message}</p>`;
+        });
+    }
+
+    function hash(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) {
+        h = (h << 5) - h + str.charCodeAt(i);
+        h |= 0;
+      }
+      return Math.abs(h);
+    }
+
+    function pseudoRandomSelect(array, seed, count) {
+      const indices = [...Array(array.length).keys()];
+      indices.sort((a, b) => pseudoRandom(seed + a) - pseudoRandom(seed + b));
+      return indices.slice(0, count).map(i => array[i]);
+    }
+
+    function pseudoRandom(x) {
+      const sin = Math.sin(x) * 10000;
+      return sin - Math.floor(sin);
+    }
+
+    function displayQuestions(questions) {
+      const area = document.getElementById('quiz-area');
+      area.innerHTML = '';
+
+      questions.forEach((q, idx) => {
+        const answerId = `answer-${idx}`;
+
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        block.innerHTML = `
+          <h3>Q${idx + 1}: ${q.question}</h3>
+          <div class="button-center">
+            <button class="show-answer" data-target="${answerId}">解答と解説を見る</button>
+          </div>
+          <div class="answer-block" id="${answerId}">
+            <span class="badge category">${q.category}</span>
+            <span class="badge difficulty-${q.difficulty}">難易度: ${q.difficulty}</span>
+            <div style="margin-top: 10px;"><b>解答と解説:</b><br>${q.answer.replace(/\n/g, '<br>')}</div>
+          </div>
+        `;
+        area.appendChild(block);
+      });
+
+      document.querySelectorAll('.show-answer').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const targetId = e.target.getAttribute('data-target');
+          const answerBlock = document.getElementById(targetId);
+          if (answerBlock) {
+            const isVisible = answerBlock.style.display === 'block';
+            answerBlock.style.display = isVisible ? 'none' : 'block';
+            if (!isVisible) {
+              answerBlock.style.animation = 'fadeIn 0.4s ease-in-out';
+            }
+          }
+        });
+      });
+    }
+  </script>
+</body>
+</html>
